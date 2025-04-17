@@ -1,7 +1,7 @@
 {
-  "name": "ipl-booking-sys-be",
+  "name": "event-management",
   "version": "1.0.0",
-  "description": "IPL Tickets Booking System",
+  "description": "Event Management System",
   "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

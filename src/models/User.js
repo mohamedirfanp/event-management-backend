@@ -1,60 +1,54 @@
-module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define('User', {
-      userId: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false
-      },
-      name: {
-        type: DataTypes.STRING(100),
-        allowNull: false
-      },
-      email: {
-        type: DataTypes.STRING(100),
-        unique: true,
-        allowNull: false
-      },
-      password: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-      },
-      role: {
-        type: DataTypes.ENUM("USER", "ADMIN"),
-        allowNull: false,
-        defaultValue: "USER"
-      },
-      isDeleted: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      },
-      isUpdated: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-        defaultValue: null
-      },
-      createdUserId: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-      },
-      updatedUserId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-        defaultValue: null
-      }
-    }, 
-    {
-      tableName: 'User'
-    });
+'use strict';
 
-    return User;
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('User', {
+    user_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    name: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true
+    },
+    password: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    role_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'role',
+        key: 'role_id'
+      }
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    created_by: {
+      type: DataTypes.STRING(100)
+    },
+    updated_by: {
+      type: DataTypes.STRING(100)
+    },
+    is_deleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
+  }, {
+    tableName: 'user',
+    timestamps: false
+  });
+
+  return User;
 };
-  
