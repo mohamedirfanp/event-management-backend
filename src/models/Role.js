@@ -13,20 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     tableName: 'role',
-    timestamps: false,
-    defaultScope: {
-      where: {
-        is_deleted: false
-      }
-    },
-    scopes: {
-      withDeleted: {},
-      onlyDeleted: {
-        where: {
-          is_deleted: true
-        }
-      }
-    }
+    timestamps: false
   });
 
   return Role;
