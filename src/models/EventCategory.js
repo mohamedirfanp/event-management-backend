@@ -11,7 +11,20 @@ module.exports = (sequelize, DataTypes) => {
       }
     }, {
       tableName: 'event_category',
-      timestamps: false
+      timestamps: false,
+      defaultScope: {
+        where: {
+          is_deleted: false
+        }
+      },
+      scopes: {
+        withDeleted: {},
+        onlyDeleted: {
+          where: {
+            is_deleted: true
+          }
+        }
+      }
     });
   
     return EventCategory;

@@ -25,7 +25,8 @@ const register = async (req, res, next) => {
       username, 
       email, 
       password: hashedPassword,
-      role_id: userRole.role_id
+      role_id: userRole.role_id,
+      created_by: 'System'
     });
 
     res.statusCode = HttpStatusCodeConstants.Created;

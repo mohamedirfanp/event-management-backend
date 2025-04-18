@@ -91,7 +91,7 @@ You will need to set up the database tables using Sequelize migrations.
 Run the following command to create the tables:
 
 ```bash
-npx sequelize-cli db:migrate --config './src/config/config.json' --migrations-path './src/migrations'
+npx sequelize-cli db:migrate --config './src/configs/config.json' --migrations-path './src/migrations'
 ```
 
 ### 6. Seed the Database with Event Data

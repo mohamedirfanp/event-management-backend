@@ -22,7 +22,10 @@ const createEvent = async (req, res, next) => {
 
     // Get or create category
     const category_id = await getOrCreateCategory(type);
-
+    
+    const email = req.decodedUser.email;
+    const existingUser = await User.findOne({ where: { email } });
+    
     const event = await Event.create({
       event_name: title,
       description,
@@ -30,8 +33,8 @@ const createEvent = async (req, res, next) => {
       location,
       thumbnail: imageUrl,
       category_id,
-      created_by: req.user?.id || 1,
-      updated_by: req.user?.id || 1
+      created_by: existingUser.user_id,
+      updated_by: existingUser.user_id
     });
 
     const formattedEvent = formatEventResponse(event);

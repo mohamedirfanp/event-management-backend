@@ -1,11 +1,12 @@
-const { User } = require('../../models');
+const { Event, User, Registration, EventCategory } = require('../../models');
 const { ResponseConstants } = require("../../constants/ResponseConstants");
 const { HttpStatusCodeConstants } = require("../../constants/HttpStatusCodeConstants");
+const { formatEventResponse } = require('../../utils/eventUtils');
 
 const getUserById = async (req, res, next) => {
     try {
         const { userId } = req.params;
-        const user = await User.findOne({ where: { userId, isDeleted: false } });
+        const user = await User.findOne({ where: { userId } });
     
         if(!user) {
             const error = new Error(ResponseConstants.User.Error.NotFound);
@@ -22,4 +23,50 @@ const getUserById = async (req, res, next) => {
     }
 }
 
-module.exports = { getUserById };
+const getAllEventRegisteredByUser = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+    
+        // Find all registrations by user
+        const registrations = await Registration.findAll({
+          where: {
+            user_id: userId
+          },
+          include: [
+            {
+              model: Event,
+              as: 'event',
+              include: [
+                {
+                  model: User,
+                  as: 'creator',
+                  attributes: ['user_id', 'username']
+                },
+                {
+                  model: Registration,
+                  as: 'registrations',
+                  attributes: ['user_id'],
+                  required: false
+                },
+                {
+                  model: EventCategory,
+                  as: 'category',
+                  attributes: ['category_type']
+                }
+              ]
+            }
+          ]
+        });
+    
+        const response = registrations.map(r => formatEventResponse(r.event));
+        
+        res.statusCode = HttpStatusCodeConstants.Ok;
+        res.responseBody = response;
+        next();
+      } catch (err) {
+        console.error(err);
+        next(err);
+      }
+}
+
+module.exports = { getUserById, getAllEventRegisteredByUser };

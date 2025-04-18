@@ -18,7 +18,20 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       timestamps: true,
       createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      updatedAt: 'updated_at',
+      defaultScope: {
+        where: {
+          is_deleted: false
+        }
+      },
+      scopes: {
+        withDeleted: {},
+        onlyDeleted: {
+          where: {
+            is_deleted: true
+          }
+        }
+      }
     });
   
     return Registration;
