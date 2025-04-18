@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt');
-const { User } = require('../../models');
+const { User, Role } = require('../../models');
 const { HttpStatusCodeConstants } = require('../../constants/HttpStatusCodeConstants');
 const { ResponseConstants } = require("../../constants/ResponseConstants");
 const { generateJwtToken } = require("../../utils/jwtUtils");
 
 const register = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const existingUser = await User.findOne({ where: { email } });
@@ -17,10 +17,19 @@ const register = async (req, res, next) => {
       throw error;
     }
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    // Fetch the default "User" role
+    const userRole = await Role.findOne({ where: { role_name: 'User' } });
+
+    // Create user with the default role
+    await User.create({ 
+      username, 
+      email, 
+      password: hashedPassword,
+      role_id: userRole.role_id
+    });
 
     res.statusCode = HttpStatusCodeConstants.Created;
-    res.responseBody = { message: ResponseConstants.User.SuccessRegistration, userId: user.userId };
+    res.responseBody = { message: ResponseConstants.User.SuccessRegistration };
     next();
   } catch (error) {
     console.error(error.message);
@@ -31,8 +40,10 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    console.log(req.body);
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({
+      where: { email },
+      include: [{ model: Role, as: 'role' }]
+    });
     // Throw error if user doesn't exist
     if(!user) {
       const error = new Error(ResponseConstants.User.Error.LoginFailed);
@@ -49,10 +60,10 @@ const login = async (req, res, next) => {
     }
 
     // Generate JWT Token
-    const payload = { userId: user.userId, email: user.email, role: user.role };
+    const payload = { userId: user.userId, email: user.email, role: user.role.role_name };
     const token = generateJwtToken(payload);
 
-    res.responseBody = { message: ResponseConstants.User.SuccessLogin, token: token };
+    res.responseBody = { message: ResponseConstants.User.SuccessLogin, token: token, user: { userId: user.userId, name: user.username, email: user.email, role: user.role.role_name } };
     next();
   } catch (error) {
     console.error(error.message);

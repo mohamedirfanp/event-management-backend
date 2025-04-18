@@ -14,7 +14,7 @@ const getUserById = async (req, res, next) => {
         }
     
         res.statusCode = HttpStatusCodeConstants.Ok;
-        res.responseBody = { userId: user.userId, name: user.name, email: user.email, role: user.role };
+        res.responseBody = { userId: user.userId, name: user.username, email: user.email, role: user.role };
         next();
     } catch(error) {
         console.error(`Error while getting an user : ${error.message}`);

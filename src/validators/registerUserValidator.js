@@ -2,7 +2,7 @@ const { checkSchema } = require('express-validator');
 const { RegisterUserValidationConstants } = require("../constants/ValidationConstants");
 
 const registerUserValidationSchema = checkSchema({
-  name: {
+  username: {
     in: ['body'],
     trim: true,
     isString: {

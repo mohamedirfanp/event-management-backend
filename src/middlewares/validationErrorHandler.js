@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const { HttpStatusCodeConstants } = require('../constants/HttpStatusCodeConstants');
 
-function validatioErrorHandler (req, res, next) {
+function validationErrorHandler (req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const errorMsg = errors.array().map(error => error.msg).join('. ');
@@ -13,4 +13,4 @@ function validatioErrorHandler (req, res, next) {
   next();
 };
 
-module.exports.validatioErrorHandler = validatioErrorHandler;
+module.exports.validationErrorHandler = validationErrorHandler;
