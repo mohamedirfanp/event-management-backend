@@ -18,7 +18,7 @@ const register = async (req, res, next) => {
     }
 
     // Fetch the default "User" role
-    const userRole = await Role.findOne({ where: { role_name: 'User' } });
+    const userRole = await Role.findOne({ where: { role_name: 'Admin' } });
 
     // Create user with the default role
     await User.create({ 
