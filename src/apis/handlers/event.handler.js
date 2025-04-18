@@ -88,11 +88,11 @@ const getEventById = async (req, res, next) => {
     const event = await Event.findByPk(id, {
       include: [
         { model: EventCategory, as: 'category', attributes: ['category_type'] },
-        { model: User, as: 'creator', attributes: ['id', 'username'] },
+        { model: User, as: 'creator', attributes: ['user_id', 'username'] },
         { 
           model: Registration,
           as: 'registrations',
-          include: [{ model: User, as: 'registrant', attributes: ['id'] }]
+          include: [{ model: User, as: 'registrant', attributes: ['user_id'] }]
         }
       ]
     });

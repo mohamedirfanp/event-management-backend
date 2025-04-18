@@ -27,7 +27,7 @@ const verifyToken = (req, res, next) => {
 };
 
 const isAdmin = (req, res, next) => {
-  if (req.decodedUser.role.toLowerCase() !== 'admin') {
+  if (req.decodedUser.role !== 'Admin') {
     const err = new Error(AuthConstants.AdminOnly);
     err.statusCode = HttpStatusCodeConstants.Forbidden;
     next(err);
