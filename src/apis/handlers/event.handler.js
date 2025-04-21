@@ -97,11 +97,11 @@ const getEventById = async (req, res, next) => {
         { 
           model: Registration,
           as: 'registrations',
-          include: [{ model: User, as: 'registrant', attributes: ['user_id'], required: false }]
+          required: false,
+          include: [{ model: User, as: 'registrant', attributes: ['user_id']}]
         }
       ]
     });
-
     if (!event) {
       const error = new Error(ResponseConstants.Event.Error.NotFound);
       error.statusCode = HttpStatusCodeConstants.NotFound;
