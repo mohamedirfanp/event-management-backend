@@ -18,7 +18,7 @@ const register = async (req, res, next) => {
     }
 
     // Fetch the default "User" role
-    const userRole = await Role.findOne({ where: { role_name: 'Admin' } });
+    const userRole = await Role.findOne({ where: { role_name: 'User' } });
 
     // Create user with the default role
     await User.create({ 
@@ -59,12 +59,12 @@ const login = async (req, res, next) => {
       error.statusCode = HttpStatusCodeConstants.Unauthorized;
       throw error;
     }
-
+    console.log(user.user_id)
     // Generate JWT Token
     const payload = { userId: user.userId, email: user.email, role: user.role.role_name };
     const token = generateJwtToken(payload);
 
-    res.responseBody = { message: ResponseConstants.User.SuccessLogin, token: token, user: { userId: user.userId, name: user.username, email: user.email, role: user.role.role_name } };
+    res.responseBody = { message: ResponseConstants.User.SuccessLogin, token: token, user: { userId: user.user_id, name: user.username, email: user.email, role: user.role.role_name } };
     next();
   } catch (error) {
     console.error(error.message);

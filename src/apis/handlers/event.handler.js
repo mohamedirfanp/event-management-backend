@@ -2,6 +2,7 @@ const { Event, User, Registration, EventCategory } = require('../../models');
 const { HttpStatusCodeConstants } = require('../../constants/HttpStatusCodeConstants');
 const { ResponseConstants } = require("../../constants/ResponseConstants");
 const { formatEventResponse, getOrCreateCategory } = require('../../utils/eventUtils');
+const { register } = require('./auth.handler');
 
 const createEvent = async (req, res, next) => {
   try {
@@ -63,7 +64,8 @@ const getAllEvents = async (req, res, next) => {
         {
           model: Registration,
           as: "registrations",
-          attributes: ['user_id']
+          attributes: ['user_id'],
+          required: false
         },
         {
           model: EventCategory,
@@ -95,7 +97,7 @@ const getEventById = async (req, res, next) => {
         { 
           model: Registration,
           as: 'registrations',
-          include: [{ model: User, as: 'registrant', attributes: ['user_id'] }]
+          include: [{ model: User, as: 'registrant', attributes: ['user_id'], required: false }]
         }
       ]
     });
