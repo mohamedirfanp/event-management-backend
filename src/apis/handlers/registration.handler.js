@@ -1,4 +1,4 @@
-const { Registration } = require('../../models');
+const { Registration, User } = require('../../models');
 const { HttpStatusCodeConstants } = require('../../constants/HttpStatusCodeConstants');
 const { ResponseConstants } = require("../../constants/ResponseConstants");
 
@@ -41,15 +41,22 @@ const createRegistration = async (req, res, next) => {
 
 const deleteRegistration = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const registration = await Registration.findByPk(id);
+    const { eventId } = req.params;
+    const email = req.decodedUser.email;
+    const existingUser = await User.findOne({ where: { email } });
+    const userId = existingUser.user_id;
+    console.log(userId, eventId);
+    const registration = await Registration.findOne({ where: { event_id: eventId, user_id:userId }});
+    console.log(registration)
     if (!registration) {
       const error = new Error(ResponseConstants.Registration.Error.NotFound);
       error.statusCode = HttpStatusCodeConstants.NotFound;
       throw error;
     }
-
-    await registration.destroy();
+    
+    registration.is_deleted = true;
+    await registration.save();
+    // await registration.destroy();
 
     res.statusCode = HttpStatusCodeConstants.Ok;
     res.responseBody = { message: ResponseConstants.Registration.SuccessDeletion };
